@@ -11,11 +11,11 @@ WORKDIR /var/www/html
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY composer.lock /var/www/html/
-COPY composer.json /var/www/html
+# COPY composer.lock /var/www/html/
+# COPY composer.json /var/www/html
+COPY . .
 RUN composer install
 
-COPY . .
 
 RUN php artisan config:cache && \
     php artisan route:cache && \
