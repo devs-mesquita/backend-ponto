@@ -1,0 +1,9 @@
+version: '3'
+services:
+  app:
+    build: ./
+    container_name: backend-ponto
+    ports:
+      - "3014:80"
+    volumes:
+      - ./storage:/var/www/html/storage
