@@ -88,7 +88,7 @@ class RegistroController extends Controller
 
             }else{
                 return response()->json([
-                    'resultado' => 'vc ja marcou o ponto doidao',
+                    'resultado' => 'complete',
                 ]);
             }
 
