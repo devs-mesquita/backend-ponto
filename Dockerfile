@@ -18,13 +18,12 @@ COPY default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
 RUN php artisan config:cache && \
     php artisan route:cache && \
-    chmod 777 -R /var/www/html/storage/ && \
+    chmod -R 775 /var/www/html/storage && \
+    chmod -R 775 /var/www/html/bootstrap/cache && \
     chown -R www-data:www-data /var/www/ && \
-    a2enmod rewrite && \
-    chown -R $USER:www-data storage && \
-    chown -R $USER:www-data bootstrap/cache && \
-    chmod -R 775 storage && \
-    chmod -R 775 bootstrap/cache
+    chown -R www-data:www-data /var/www/html/storage && \
+    chown -R www-data:www-data /var/www/html/bootstrap/cache && \
+    a2enmod rewrite
 
 EXPOSE 80
 
