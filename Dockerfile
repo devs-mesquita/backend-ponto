@@ -10,12 +10,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# COPY composer.lock /var/www/html/
-# COPY composer.json /var/www/html
 COPY . .
 RUN composer install
-
 
 RUN php artisan config:cache && \
     php artisan route:cache && \
@@ -24,7 +20,5 @@ RUN php artisan config:cache && \
     a2enmod rewrite
 
 EXPOSE 80
-
-# CMD ["apache2ctl", "-D", "FOREGROUND"]
 
 CMD ["/bin/bash",  "/var/www/html/scripts.sh"]
