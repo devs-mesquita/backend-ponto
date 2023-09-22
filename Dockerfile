@@ -13,6 +13,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 RUN composer install
 
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+
 RUN php artisan config:cache && \
     php artisan route:cache && \
     chmod 777 -R /var/www/html/storage/ && \
