@@ -21,10 +21,10 @@ RUN php artisan config:cache && \
     chown -R www-data:www-data /var/www/ && \
     chown -R www-data:www-data /var/www/html/storage && \
     chown -R www-data:www-data /var/www/html/bootstrap/cache && \
-    chown -R www-data:www-data /var/www/html/storage/logs/laravel.log && \
+    chown -R www-data:www-data /var/www/html/storage/logs && \
     chmod -R 775 /var/www/html/storage && \
     chmod -R 775 /var/www/html/bootstrap/cache && \
-    chmod -R 775 /var/www/html/storage/logs/laravel.log && \
+    chmod -R 775 /var/www/html/storage/logs && \
     a2enmod rewrite
 
 EXPOSE 80
