@@ -23,5 +23,6 @@ class Registro extends Model
         'volta_alm_img',
         'saida',
         'saida_img',
+        'timeout'
     ];
 }

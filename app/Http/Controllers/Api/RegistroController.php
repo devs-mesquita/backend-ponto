@@ -20,6 +20,7 @@ class RegistroController extends Controller
         $checa_registro = Registro::where('cpf',$cpf)->where('data',$data_atual)->first();
         //   dd($checa_registro);
 
+        
         if($checa_registro == null)
         {
             $registro = new Registro;
@@ -30,69 +31,82 @@ class RegistroController extends Controller
 
             $image = request()->file('img');
             $upload = $image->store('uploadImg');
-
+            
             $registro->entrada_img = $upload;
+            $registro->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
             
             $registro->save();
             
             return response()->json([
                 'resultado' => 'ok',
+                'tipo' => 'entrada'
             ],200);
 
         }else{
+            // Checar timeout
+            $atual = Carbon::now('America/Sao_Paulo');
+            $timeout = Carbon::createFromFormat('d-m-Y H:i:s',
+                Carbon::parse($checa_registro->timeout)->format('d-m-Y H:i:s'),
+            'America/Sao_Paulo');
+            if($timeout->greaterThan($atual)) {
+                return response()->json([
+                    'resultado' => 'timeout',
+                ]);
+            }
 
             if($checa_registro->entrada_alm == null){
-
                 $checa_registro->entrada_alm        = $hora_atual;
                 
                 $image = request()->file('img');
                 $upload = $image->store('uploadImg');
 
                 $checa_registro->entrada_alm_img = $upload;
+                $checa_registro->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
 
                 $checa_registro->save();
 
                 return response()->json([
                     'resultado' => 'ok',
+                    'tipo' => 'inicio-intervalo'
                 ],200);
 
             }elseif ($checa_registro->volta_alm == null) {
-
                 $checa_registro->volta_alm        = $hora_atual;
 
                 $image = request()->file('img');
                 $upload = $image->store('uploadImg');
                 
                 $checa_registro->volta_alm_img = $upload;
+                $checa_registro->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
 
                 $checa_registro->save();
                 
                 return response()->json([
                     'resultado' => 'ok',
+                    'tipo' => 'fim-intervalo'
                 ],200);
 
             }elseif ($checa_registro->saida == null){
-
                 $checa_registro->saida        = $hora_atual;
 
                 $image = request()->file('img');
                 $upload = $image->store('uploadImg');
                 
                 $checa_registro->saida_img = $upload;
+                $checa_registro->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
 
                 $checa_registro->save();
                 
                 return response()->json([
                     'resultado' => 'ok',
+                    'tipo' => 'saida'
                 ],200);
 
-            }else{
+            } else {
                 return response()->json([
                     'resultado' => 'complete',
                 ]);
             }
-
-            
         }
 
         // dd($checa_registro);

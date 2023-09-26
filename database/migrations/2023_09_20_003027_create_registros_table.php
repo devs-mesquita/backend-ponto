@@ -22,14 +22,16 @@ return new class extends Migration
             $table->time('entrada');
             $table->string('entrada_img',200);
             
-            $table->time('entrada_alm')             ->nullable();
-            $table->string('entrada_alm_img',200)   ->nullable();
+            $table->time('entrada_alm')           ->nullable();
+            $table->string('entrada_alm_img',200) ->nullable();
             
-            $table->time('volta_alm')               ->nullable();
-            $table->string('volta_alm_img',200)     ->nullable();
+            $table->time('volta_alm')             ->nullable();
+            $table->string('volta_alm_img',200)   ->nullable();
 
-            $table->time('saida')                   ->nullable();
-            $table->string('saida_img',200)         ->nullable();
+            $table->time('saida')                 ->nullable();
+            $table->string('saida_img',200)       ->nullable();
+
+            $table->dateTime('timeout')           ->nullable();
             
             $table->timestamps();
             
