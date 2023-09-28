@@ -51,7 +51,7 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'created',
+            'resultado' => 'created',
             'user' => $user
         ]);
     }
