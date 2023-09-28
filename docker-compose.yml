@@ -1,9 +1,8 @@
-version: '3'
+version: '3.8'
 services:
   app:
     build: ./
-    container_name: backend-ponto
     ports:
       - "3015:80"
     volumes:
-      - ./storage/uploadImg/:/var/www/html/storage/uploadImg/
+      - ./storage/uploadImg:/var/www/html/storage/uploadImg:delegated

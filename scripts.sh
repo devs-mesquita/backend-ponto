@@ -1,5 +1,4 @@
 #!/bin/bash
-
 php artisan key:generate && \
 php artisan migrate --force && \
 php artisan jwt:secret && \
