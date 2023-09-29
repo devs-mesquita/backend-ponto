@@ -46,7 +46,7 @@ class AuthController extends Controller
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
-            'password' => Hash::make(env('DEFAULT_PASSWORD', '')),
+            'password' => Hash::make(env('USER_DEFAULT_PASSWORD', '')),
             'cpf'      => $request->cpf,
         ]);
 
