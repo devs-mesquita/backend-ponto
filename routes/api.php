@@ -25,5 +25,5 @@ Route::controller(AuthController::class)->group(function () {
 
 
 // Route::post('registro/{cpf}',           'Api/RegistroController@createRegistro');
-Route::post('registro/{cpf}',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
+Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
 

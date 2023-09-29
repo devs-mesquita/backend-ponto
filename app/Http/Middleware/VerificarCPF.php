@@ -17,12 +17,12 @@ class VerificarCPF
     public function handle(Request $request, Closure $next): Response
     {
 
-        $cpf = $request->route('cpf');
+        $cpf = $request->cpf;
        
         $user = User::where('cpf', $cpf)->first();
 
         if (!$user) {
-            return response()->json(['resultado' => 'invalid_cpf'], 401);
+            return response()->json(['resultado' => 'invalid-cpf'], 401);
         }
     
         return $next($request);
