@@ -15,6 +15,7 @@ class RegistroController extends Controller
         // dd($request->all());
         $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
         $hora_atual = Carbon::now('America/Sao_Paulo')->format('H:i');
+        $cpf = $request->cpf;
 
         // dd($request->all());
         $checa_registro = Registro::where('cpf',$cpf)->where('data',$data_atual)->first();
@@ -25,7 +26,7 @@ class RegistroController extends Controller
         {
             $registro = new Registro;
             
-            $registro->cpf             = $request->cpf;
+            $registro->cpf             = $cpf;
             $registro->entrada         = $hora_atual;
             $registro->data            = $data_atual;
 
