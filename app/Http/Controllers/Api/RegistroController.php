@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 
 class RegistroController extends Controller
 {
-    public function createRegistro(Request $request, $cpf)
+    public function createRegistro(Request $request)
     {
         // dd($request->all());
         $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
@@ -25,7 +25,7 @@ class RegistroController extends Controller
         {
             $registro = new Registro;
             
-            $registro->cpf             = $cpf;
+            $registro->cpf             = $request->cpf;
             $registro->entrada         = $hora_atual;
             $registro->data            = $data_atual;
 
