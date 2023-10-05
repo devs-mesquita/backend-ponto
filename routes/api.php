@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegistroController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\SetoresController;
+use App\Http\Controllers\Api\IpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +25,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('refresh', 'refresh');
 });
 
+Route::resources([
+    'setores' => SetoresController::class,
+    'ip'      => IpController::class,
+]);
+
+// Route::get('setores',   [SetoresController::class, 'index']);
 
 // Route::post('registro/{cpf}',           'Api/RegistroController@createRegistro');
 Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');

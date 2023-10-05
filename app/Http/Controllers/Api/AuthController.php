@@ -48,6 +48,8 @@ class AuthController extends Controller
             'email'    => $request->email,
             'password' => Hash::make(config('app.user_default_password', '')),
             'cpf'      => $request->cpf,
+            'nivel'    => $request->nivel,
+            'setor_id' => $request->setor_id,
         ]);
 
         return response()->json([

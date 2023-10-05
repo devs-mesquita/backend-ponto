@@ -23,6 +23,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'cpf',
         'password',
+        'nivel',
+        'setor_id',
     ];
 
     /**
@@ -54,4 +56,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function setor()
+    {
+        return $this->belongsTo('App\Models\Setor','setor_id'); 
+    }
+
+
 }
