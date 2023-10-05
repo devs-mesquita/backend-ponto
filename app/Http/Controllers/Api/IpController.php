@@ -11,9 +11,10 @@ class IpController extends Controller
     
     public function index()
     {
-        dd($request->fingerprint());
+        dd(request()->fingerprint());
+        
         $ips = Ip::all();
-
+        
         return response()->json([
             'ips' => $ips,
         ],200);
@@ -21,7 +22,8 @@ class IpController extends Controller
 
     public function store(Request $request)
     {
-        
+        dd($request()->fingerprint());
+
         $ip = new Ip;
         
         $ip->ip = $request->ip;
