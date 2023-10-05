@@ -22,7 +22,7 @@ class IpController extends Controller
 
     public function store(Request $request)
     {
-        dd($request()->fingerprint());
+        dd($request->fingerprint());
 
         $ip = new Ip;
         
