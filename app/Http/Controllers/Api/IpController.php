@@ -20,7 +20,7 @@ class IpController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->ip());
+        dd($request->ips());
         
         $ip = new Ip;
         
