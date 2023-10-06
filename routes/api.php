@@ -27,7 +27,6 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::resources([
     'setores' => SetoresController::class,
-    'ip'      => IpController::class,
 ]);
 
 // Route::get('setores',   [SetoresController::class, 'index']);
