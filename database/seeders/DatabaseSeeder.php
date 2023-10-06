@@ -13,22 +13,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $ponto = \App\Models\Setor::firstOrCreate([
-            "id" => 1,
+        $ponto = \App\Models\Setor::firstOrCreate(["nome" => "PONTO"], [
             "nome" => "PONTO",
             "soma_entrada" => 0,
             "soma_saida" => 0,
         ]);
 
-        // $tecnologia = \App\Models\Setor::firstOrCreate([
-        //     "id" => 2,
+        // $tecnologia = \App\Models\Setor::firstOrCreate([ "nome" => "TECNOLOGIA" ], [
         //     "nome" => "TECNOLOGIA",
         //     "soma_entrada" => -1,
         //     "soma_saida" => 1,
         // ]);
 
-        \App\Models\User::firstOrCreate([
-            "id" => 1,
+        \App\Models\User::firstOrCreate(["email" => "root@mesquita.rj.gov.br"], [
             "email" => "root@mesquita.rj.gov.br",
             "name" => "Super Admin",
             "password" => Hash::make(config("app.user_default_password", "")),
