@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $tecnologia = \App\Models\Setor::firstOrCreate([
-            "id" => 1
+            "id" => 1,
             "nome" => "TECNOLOGIA",
             "soma_entrada" => -1,
             "soma_saida" => 1,
