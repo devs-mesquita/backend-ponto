@@ -12,11 +12,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $tecnologia = \App\Models\Setor::firstOrCreate([
+            'id' => 1
+            'nome' => 'TECNOLOGIA',
+            'soma_entrada' => -1,
+            'soma_saida' => 1,
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $tecnologia = \App\Models\Setor::firstOrCreate([
+            'id' => 2,
+            'nome' => 'PONTO',
+            'soma_entrada' => 0,
+            'soma_saida' => 0,
+        ]);
+
+        \App\Models\User::firstOrcreate([
+            'name' => 'Felipe Vidal',
+            'email' => 'felipe.vidal@mesquita.rj.gov.br',
+            'password' => Hash::make(config('app.user_default_password', '')),
+            'cpf'      => $request->cpf,
+            'nivel'    => "Super-Admin",
+            'setor_id' => $tecnologia->id,
+        ]);
     }
 }
