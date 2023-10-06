@@ -28,8 +28,9 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         \App\Models\User::firstOrCreate([
-            "name" => "Super Admin",
+            "id" => 1,
             "email" => "root@mesquita.rj.gov.br",
+            "name" => "Super Admin",
             "password" => Hash::make(config("app.user_default_password", "")),
             "cpf"      => "11111111111",
             "nivel"    => "Super-Admin",
