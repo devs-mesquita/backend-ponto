@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         //     "soma_saida" => 1,
         // ]);
 
-        \App\Models\User::firstOrcreate([
+        \App\Models\User::firstOrCreate([
             "name" => "Super Admin",
             "email" => "root@mesquita.rj.gov.br",
             "password" => Hash::make(config("app.user_default_password", "")),
