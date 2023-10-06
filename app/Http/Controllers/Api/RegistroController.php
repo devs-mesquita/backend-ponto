@@ -16,7 +16,12 @@ class RegistroController extends Controller
         $hora_atual = Carbon::now('America/Sao_Paulo')->format('H:i');
         $cpf = $request->cpf;
 
-        $checa_registro = Registro::where('cpf',$cpf)->where('data',$data_atual)->first();
+        $checa_registro = Registro::where([
+            'cpf' => $cpf,
+            'data' => $data_atual
+        ])->whereHas('setor', function ($query) {
+            return $query->where('nome', '!=', 'PONTO')
+        })->first();
         
         if($checa_registro == null)
         {
