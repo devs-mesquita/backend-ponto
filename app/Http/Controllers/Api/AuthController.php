@@ -30,7 +30,8 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
+        //$user = Auth::user();
+        $user = User::with('setor')->find(Auth::id());
         return response()->json([
             'user' => $user,
             'authorization' => [
@@ -69,7 +70,8 @@ class AuthController extends Controller
     public function refresh()
     {
         return response()->json([
-            'user' => Auth::user(),
+            //'user' => Auth::user(),
+            'user' => User::with('setor')->find(Auth::id()),
             'authorisation' => [
                 'token' => Auth::refresh(),
                 'type' => 'bearer',

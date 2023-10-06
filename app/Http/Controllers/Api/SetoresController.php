@@ -17,14 +17,8 @@ class SetoresController extends Controller
         ],200);
     }
 
-    // public function create()
-    // {
-    // }
-
     public function store(Request $request)
     {
-
-        // dd($request->nome);
         $setor = new Setor;
 
         $setor->nome          = $request->nome;
