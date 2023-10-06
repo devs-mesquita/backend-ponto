@@ -14,16 +14,6 @@ class RegistroController extends Controller
     public function createRegistro(Request $request)
     {
         $cpf = $request->cpf;
-
-        $checa_user = User::where('cpf', $cpf)->whereHas('setor', function($q) {
-            return $q->where('nome', '!=', 'PONTO');
-        })->first();
-        if ($checa_user == null) {
-            return response()->json([
-                'resultado' => 'complete',
-            ]);
-        }
-
         $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
         $hora_atual = Carbon::now('America/Sao_Paulo')->format('H:i');
 

@@ -18,9 +18,11 @@ class VerificarCPF
     {
 
         $cpf = $request->cpf;
-       
-        $user = User::where('cpf', $cpf)->first();
 
+        $user = User::where('cpf', $cpf)->whereHas('setor', function($q) {
+            return $q->where('nome', '!=', 'PONTO');
+        })->first();
+        
         if (!$user) {
             return response()->json(['resultado' => 'invalid-cpf'], 401);
         }
