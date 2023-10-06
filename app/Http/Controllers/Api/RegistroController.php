@@ -12,16 +12,21 @@ class RegistroController extends Controller
 {
     public function createRegistro(Request $request)
     {
-        $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
-        $hora_atual = Carbon::now('America/Sao_Paulo')->format('H:i');
         $cpf = $request->cpf;
 
-        $checa_registro = Registro::where([
-            'cpf' => $cpf,
-            'data' => $data_atual
-        ])->whereHas('setor', function ($query) {
-            return $query->where('nome', '!=', 'PONTO')
+        $checa_user = User::where('cpf', $cpf)->whereHas('setor', function($q) {
+            return $q->where('nome', '!=', 'PONTO');
         })->first();
+        if ($checa_user == null) {
+            return response()->json([
+                'resultado' => 'complete',
+            ]);
+        }
+
+        $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
+        $hora_atual = Carbon::now('America/Sao_Paulo')->format('H:i');
+
+        $checa_registro = Registro::where('cpf', $cpf)->where('data',$data_atual)->first();
         
         if($checa_registro == null)
         {
