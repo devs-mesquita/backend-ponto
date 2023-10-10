@@ -13,28 +13,11 @@ return new class extends Migration
     {
         Schema::create('registros', function (Blueprint $table) {
             $table->id();
-
-            // $table->string('nome');
-            $table->string('cpf',14);
-
-            $table->date('data');
-
-            $table->time('entrada');
-            $table->string('entrada_img',200);
-            
-            $table->time('entrada_alm')           ->nullable();
-            $table->string('entrada_alm_img',200) ->nullable();
-            
-            $table->time('volta_alm')             ->nullable();
-            $table->string('volta_alm_img',200)   ->nullable();
-
-            $table->time('saida')                 ->nullable();
-            $table->string('saida_img',200)       ->nullable();
-
-            $table->dateTime('timeout')           ->nullable();
-            
+            $table->string('cpf', 11);
+            $table->string('tipo');
+            $table->string('img', 200);
+            $table->dateTime('data_hora');
             $table->timestamps();
-            
         });
     }
 

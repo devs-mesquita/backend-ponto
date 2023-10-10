@@ -15,14 +15,6 @@ class Registro extends Model
         // 'nome',
         'cpf',
         'data',
-        'entrada',
-        'entrada_img',
-        'entrada_alm',
-        'entrada_alm_img',        
-        'volta_alm',
-        'volta_alm_img',
-        'saida',
-        'saida_img',
-        'timeout'
+        'img',
     ];
 }
