@@ -16,22 +16,23 @@ class RegistroController extends Controller
         $cpf = $request->cpf;
         $user = User::where('cpf', $cpf)->first();
 
-        // Checar timeout
-        $atual = Carbon::now('America/Sao_Paulo');
-        
-        $timeout = Carbon::createFromFormat('d-m-Y H:i:s',
-        Carbon::parse($user->timeout)->format('d-m-Y H:i:s'),
-        'America/Sao_Paulo');
+        if ($user->timeout !== null) {
+          // Checar timeout
+          $atual = Carbon::now('America/Sao_Paulo');
+          
+          $timeout = Carbon::createFromFormat('d-m-Y H:i:s',
+          Carbon::parse($user->timeout)->format('d-m-Y H:i:s'),
+          'America/Sao_Paulo');
 
-        if($timeout->greaterThan($atual)) {
-          return response()->json([
-            'resultado' => 'timeout',
-          ]);
+          if ($timeout->greaterThan($atual)) {
+            return response()->json([
+              'resultado' => 'timeout',
+            ]);
+          }
         }
 
+        // Checar existência de registros.
         $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
-        
-        // Checar existência de registros do dia.
         $ultimo_registro = Registro::where('cpf', $cpf)
           ->whereDate('data_hora', $data_atual)
           ->orderBy('data_hora', 'desc')
