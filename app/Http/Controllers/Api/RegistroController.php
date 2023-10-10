@@ -132,4 +132,8 @@ class RegistroController extends Controller
         'resultado' => 'complete',
       ]);
     }
+
+    public function getRegistros(Request $request) {
+      dd($request->query);
+    }
 }

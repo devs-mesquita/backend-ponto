@@ -29,8 +29,6 @@ Route::resources([
     'setores' => SetoresController::class,
 ]);
 
-// Route::get('setores',   [SetoresController::class, 'index']);
-
-// Route::post('registro/{cpf}',           'Api/RegistroController@createRegistro');
 Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
+Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
 
