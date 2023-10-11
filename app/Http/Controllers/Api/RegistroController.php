@@ -139,8 +139,12 @@ class RegistroController extends Controller
       $cpf = $request->cpf;
 
       $registros = Registro::whereBetween('data_hora', [$from, $to])
-      ->orderBy('data_hora', 'asc')
-      ->get();
+      ->where('cpf', $cpf)
+      ->orWhere(function ($query) use ($from, $to) {
+        return $query->whereBetween('data_hora', [$from, $to])
+          ->whereIn('tipo', ['facultativo', 'feriado']);
+      })
+      ->orderBy('data_hora', 'asc')->get();
 
       return response()->json([
         'registros' => $registros
