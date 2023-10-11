@@ -134,6 +134,14 @@ class RegistroController extends Controller
     }
 
     public function getRegistros(Request $request) {
-      dd($request->query);
+      $from = Carbon::parse($request->from)->startOfDay();
+      $to = Carbon::parse($request->to)->endOfDay();
+      $cpf = $request->cpf;
+
+      $registros = Registro::whereBetween('data_hora', [$from, $to])->get();
+
+      return response()->json([
+        'registros' => $registros
+      ]);
     }
 }
