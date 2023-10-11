@@ -138,7 +138,9 @@ class RegistroController extends Controller
       $to = Carbon::parse($request->to)->endOfDay();
       $cpf = $request->cpf;
 
-      $registros = Registro::whereBetween('data_hora', [$from, $to])->get();
+      $registros = Registro::whereBetween('data_hora', [$from, $to])
+      ->orderBy('data_hora', 'asc')
+      ->get();
 
       return response()->json([
         'registros' => $registros
