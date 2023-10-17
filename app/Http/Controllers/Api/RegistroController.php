@@ -14,6 +14,37 @@ class RegistroController extends Controller
     public function createRegistro(Request $request)
     {
         $cpf = $request->cpf;
+
+        if ($cpf === "sistema") {
+          $tipo = $request->tipo;
+          $data_registro = Carbon::parse($request->date)->midDay();
+
+          $checa_registro = Registro::where('cpf', $cpf)
+          ->whereDate('data_hora', $data_registro)
+          ->first();
+
+          if ($checa_registro !== null) {
+            return response()->json([
+              'resultado' => 'existente',
+              'tipo' => $checa_registro->tipo,
+            ], 401);
+          }
+
+          $registro = new Registro;
+
+          $registro->cpf = $cpf;
+          $registro->data_hora = $data_registro;
+          $registro->tipo = $tipo;
+
+          $registro->img = "SISTEMA";
+          $registro->save();
+
+          return response()->json([
+              'resultado' => 'ok',
+              'tipo' => $tipo,
+          ], 200);
+        }
+
         $user = User::where('cpf', $cpf)->first();
 
         if ($user->timeout !== null) {
@@ -149,5 +180,9 @@ class RegistroController extends Controller
       return response()->json([
         'registros' => $registros
       ]);
+    }
+
+    public function deleteRegistro(Request $request) {
+      dd($request);
     }
 }
