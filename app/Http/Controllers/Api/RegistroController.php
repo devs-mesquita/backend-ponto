@@ -183,6 +183,13 @@ class RegistroController extends Controller
     }
 
     public function deleteRegistro(Request $request) {
-      dd($request);
+      $date = Carbon::parse($request->date);
+      $cpf = $request->cpf;
+
+      $deleted_registro = Registro::where('cpf', $cpf)->whereDate('data_hora', $date)->delete();
+
+      return response()->json([
+        'resultado' => 'ok'
+      ], 200);
     }
 }
