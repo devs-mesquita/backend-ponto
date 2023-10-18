@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('registros', function (Blueprint $table) {
             $table->id();
             $table->string('cpf', 11);
-            $table->string('tipo');
             $table->enum('tipo',['entrada','inicio-intervalo','fim-intervalo', 'saida', 'atestado', 'ferias', 'falta', 'feriado', 'facultativo']);
             $table->string('img', 200);
             $table->dateTime('data_hora');
