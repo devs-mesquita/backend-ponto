@@ -78,4 +78,13 @@ class AuthController extends Controller
             ]
         ]);
     }
+
+    public function getUsersBySetor($setor)
+    {
+      $users = User::with('setor')->where('setor_id', $setor)->get();
+
+      return response()->json([
+        'users' => $users
+      ]);
+    }
 }
