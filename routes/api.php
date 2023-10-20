@@ -31,5 +31,6 @@ Route::resources([
 
 Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
 Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
+Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
 Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
 Route::get('users/{setor}', [AuthController::class, 'getUsersBySetor']);

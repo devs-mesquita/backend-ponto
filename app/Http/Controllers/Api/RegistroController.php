@@ -36,7 +36,7 @@ class RegistroController extends Controller
           $registro->data_hora = $data_registro;
           $registro->tipo = $tipo;
 
-          $registro->img = "SISTEMA";
+          $registro->img = "sistema";
           $registro->save();
 
           return response()->json([
@@ -191,5 +191,44 @@ class RegistroController extends Controller
       return response()->json([
         'resultado' => 'ok'
       ], 200);
+    }
+
+    public function createFerias(Request $request)
+    {
+        $cpf = $request->cpf;
+        $dates = $request->dates;
+        $user = User::where('cpf', $cpf)->first();
+
+        $date_start = Carbon::parse($dates[0])->startOfDay();
+        $date_end = Carbon::parse($dates[count($dates)-1])->endOfDay();
+
+        // Checa existência de registros de férias no período.
+        /* $checa_registros = Registro::where([
+            ['cpf', '=', $cpf],
+            ['tipo', '=', 'ferias']
+          ])->whereBetween('data_hora', [$date_start, $date_end])
+          ->count();
+        
+        if ($checa_registro > 0) {
+          return response()->json([
+            'resultado' => 'existente',
+            'tipo' => 'ferias',
+          ], 401);
+        } */
+
+        foreach ($dates as $date) {
+          $registro = new Registro;
+          
+          $registro->cpf = $cpf;
+          $registro->data_hora = Carbon::parse($date)->toDateTimeString();
+          $registro->tipo = 'ferias';
+          $registro->img = "ferias";
+          $registro->save();
+        }
+
+        return response()->json([
+            'resultado' => 'ok',
+            'tipo' => 'ferias'
+        ], 200);
     }
 }
