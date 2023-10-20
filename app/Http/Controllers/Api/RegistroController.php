@@ -217,13 +217,17 @@ class RegistroController extends Controller
         } */
 
         foreach ($dates as $date) {
-          $registro = new Registro;
-          
-          $registro->cpf = $cpf;
-          $registro->data_hora = Carbon::parse($date)->toDateTimeString();
-          $registro->tipo = 'ferias';
-          $registro->img = "ferias";
-          $registro->save();
+          $registro = Registro::firstOrCreate([
+            'cpf' => $cpf,
+            'data_hora' => Carbon::parse($date)->toDateTimeString(),
+            'tipo' => 'ferias',
+            'img' => "ferias"
+          ], [
+            'cpf' => $cpf,
+            'data_hora' => Carbon::parse($date)->toDateTimeString(),
+            'tipo' => 'ferias',
+            'img' => "ferias"
+          ]);
         }
 
         return response()->json([
