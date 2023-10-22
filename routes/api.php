@@ -19,18 +19,21 @@ use App\Http\Controllers\Api\IpController;
 */
 
 Route::controller(AuthController::class)->group(function () {
-    Route::post('login', 'login');
-    Route::post('register', 'register');
-    Route::post('logout', 'logout');
-    Route::post('refresh', 'refresh');
+  Route::post('login', 'login');
+  Route::post('register', 'register');
+  Route::post('logout', 'logout');
+  Route::post('refresh', 'refresh');
 });
 
-Route::resources([
-    'setores' => SetoresController::class,
-]);
+// Authenticated Routes:
+Route::middleware(['api-auth'])->group(function () {
+  Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
+  Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
+  Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
+  
+  Route::get('users/{setor}', [AuthController::class, 'getUsersBySetor']);
+  
+  Route::resources(['setores' => SetoresController::class]);
+});
 
 Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
-Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
-Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
-Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
-Route::get('users/{setor}', [AuthController::class, 'getUsersBySetor']);

@@ -16,6 +16,10 @@ class RegistroController extends Controller
         $cpf = $request->cpf;
 
         if ($cpf === "sistema") {
+          if(!auth()->check()) {
+            return response()->json(['message' => 'Unauthenticated.'], 403);
+          }
+
           $tipo = $request->tipo;
           $data_registro = Carbon::parse($request->date)->midDay();
 
@@ -46,6 +50,10 @@ class RegistroController extends Controller
         }
 
         if ($request->tipo === "falta") {
+          if(!auth()->check()) {
+            return response()->json(['message' => 'Unauthenticated.'], 403);
+          }
+
           $tipo = $request->tipo;
           $data_registro = Carbon::parse($request->date)->midDay();
 
@@ -231,20 +239,6 @@ class RegistroController extends Controller
 
         $date_start = Carbon::parse($dates[0])->startOfDay();
         $date_end = Carbon::parse($dates[count($dates)-1])->endOfDay();
-
-        // Checa existência de registros de férias no período.
-        /* $checa_registros = Registro::where([
-            ['cpf', '=', $cpf],
-            ['tipo', '=', 'ferias']
-          ])->whereBetween('data_hora', [$date_start, $date_end])
-          ->count();
-        
-        if ($checa_registro > 0) {
-          return response()->json([
-            'resultado' => 'existente',
-            'tipo' => 'ferias',
-          ], 401);
-        } */
 
         foreach ($dates as $date) {
           $registro = Registro::firstOrCreate([

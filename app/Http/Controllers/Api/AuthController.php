@@ -37,6 +37,7 @@ class AuthController extends Controller
             'authorization' => [
                 'token' => $token,
                 'type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
             ]
         ]);
     }
@@ -70,11 +71,11 @@ class AuthController extends Controller
     public function refresh()
     {
         return response()->json([
-            //'user' => Auth::user(),
             'user' => User::with('setor')->find(Auth::id()),
-            'authorisation' => [
+            'authorization' => [
                 'token' => Auth::refresh(),
                 'type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
             ]
         ]);
     }

@@ -17,7 +17,7 @@ services:
     ports:
       - "3001:80"
     volumes:
-      - ./storage/app/uploadImg:/var/www/html/storage/app/uploadImg:delegated
+      - ./storage:/var/www/html/storage:delegated
     restart: always
 
 volumes:
