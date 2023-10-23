@@ -16,12 +16,12 @@ class RegistroController extends Controller
         $cpf = $request->cpf;
 
         if ($cpf === "sistema") {
-          if(!auth()->check()) {
-            return response()->json(['message' => 'Unauthenticated.'], 403);
+          if(!in_array(auth()->user()->nivel(), ['Super-Admin', 'Admin'])) {
+            return response()->json(['message' => 'Unauthorized.'], 402);
           }
 
           $tipo = $request->tipo;
-          $data_registro = Carbon::parse($request->date)->midDay();
+          $data_registro = Carbon::parse($request->date)->startOfDay();
 
           $checa_registro = Registro::where('cpf', $cpf)
           ->whereDate('data_hora', $data_registro)
@@ -50,12 +50,12 @@ class RegistroController extends Controller
         }
 
         if ($request->tipo === "falta") {
-          if(!auth()->check()) {
-            return response()->json(['message' => 'Unauthenticated.'], 403);
+          if(!in_array(auth()->user()->nivel, ['Super-Admin', 'Admin'])) {
+            return response()->json(['message' => 'Unauthorized.'], 402);
           }
 
           $tipo = $request->tipo;
-          $data_registro = Carbon::parse($request->date)->midDay();
+          $data_registro = Carbon::parse($request->date)->startOfDay();
 
           $checa_registro = Registro::where('cpf', $cpf)
           ->whereDate('data_hora', $data_registro)
@@ -83,6 +83,10 @@ class RegistroController extends Controller
           ], 200);
         }
 
+        if(auth()->user()->setor->nome !== "PONTO") {
+          return response()->json(['resultado' => 'error', 'message' => 'Unauthorized.'], 402);
+        }
+
         $user = User::where('cpf', $cpf)->first();
 
         if ($user->timeout !== null) {
@@ -100,15 +104,45 @@ class RegistroController extends Controller
           }
         }
 
-        // Checar existência de registros.
         $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
+
+        // Checar existência de feriado.
+        $feriado = Registro::where('tipo', 'feriado')
+        ->whereDate('data_hora', $data_atual)
+        ->first();
+
+        if($feriado !== null) {
+          return response()->json([
+            'resultado' => 'feriado',
+        ], 200);
+        }
+
+        // Checar existência de registros.
         $ultimo_registro = Registro::where('cpf', $cpf)
-          ->whereDate('data_hora', $data_atual)
+        ->whereDate('data_hora', $data_atual)
           ->orderBy('data_hora', 'desc')
           ->first();
+
+        if($ultimo_registro?->tipo === 'ferias') {
+          return response()->json([
+              'resultado' => 'ferias',
+          ], 200);
+        }
+
+        if($ultimo_registro?->tipo === 'falta') {
+          return response()->json([
+              'resultado' => 'falta',
+          ], 200);
+        }
+
+        if($ultimo_registro?->tipo === 'atestado') {
+          return response()->json([
+              'resultado' => 'atestado',
+          ], 200);
+        }
         
         // Registrar Entrada
-        if ($ultimo_registro === null) {
+        if ($ultimo_registro === null || $ultimo_registro?->tipo === "facultativo" ) {
           $registro = new Registro;
           
           $registro->cpf = $cpf;
@@ -243,12 +277,12 @@ class RegistroController extends Controller
         foreach ($dates as $date) {
           $registro = Registro::firstOrCreate([
             'cpf' => $cpf,
-            'data_hora' => Carbon::parse($date)->toDateTimeString(),
+            'data_hora' => Carbon::parse($date)->startOfDay()->toDateTimeString(),
             'tipo' => 'ferias',
             'img' => "ferias"
           ], [
             'cpf' => $cpf,
-            'data_hora' => Carbon::parse($date)->toDateTimeString(),
+            'data_hora' => Carbon::parse($date)->startOfDay()->toDateTimeString(),
             'tipo' => 'ferias',
             'img' => "ferias"
           ]);

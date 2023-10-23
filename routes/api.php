@@ -28,6 +28,7 @@ Route::controller(AuthController::class)->group(function () {
 // Authenticated Routes:
 Route::middleware(['api-auth'])->group(function () {
   Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
+  Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
   Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
   Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
   
@@ -35,5 +36,3 @@ Route::middleware(['api-auth'])->group(function () {
   
   Route::resources(['setores' => SetoresController::class]);
 });
-
-Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
