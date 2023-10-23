@@ -20,19 +20,29 @@ use App\Http\Controllers\Api\IpController;
 
 Route::controller(AuthController::class)->group(function () {
   Route::post('login', 'login');
-  Route::post('register', 'register');
   Route::post('logout', 'logout');
   Route::post('refresh', 'refresh');
 });
 
-// Authenticated Routes:
+// Authenticated, >= User:
 Route::middleware(['api-auth'])->group(function () {
   Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
-  Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
-  Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
-  Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
-  
-  Route::get('users/{setor}', [AuthController::class, 'getUsersBySetor']);
-  
-  Route::resources(['setores' => SetoresController::class]);
+  Route::post('changepassword', [AuthController::class, 'changePassword']);
+
+  // >= Admin
+  Route::middleware(['admin'])->group(function () {
+    Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
+    Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
+    Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
+    
+    Route::resources(['setores' => SetoresController::class]);
+    Route::get('users/{setor}', [AuthController::class, 'getUsersBySetor']);
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('resetpassword', [AuthController::class, 'resetPassword']);
+  });
+
+  // Super-Admin
+  // Route::middleware(['super-admin'])->group(function () {
+  //   
+  // });
 });

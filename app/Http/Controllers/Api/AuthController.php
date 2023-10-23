@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'getUsersBySetor']]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api', ['except' => ['login', 'register', 'getUsersBySetor']]);
+    // }
 
     public function login(Request $request)
     {
@@ -37,7 +37,7 @@ class AuthController extends Controller
             'authorization' => [
                 'token' => $token,
                 'type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'expires_in' => 60 * 24 * 365.25
             ]
         ]);
     }
@@ -73,9 +73,9 @@ class AuthController extends Controller
         return response()->json([
             'user' => User::with('setor')->find(Auth::id()),
             'authorization' => [
-                'token' => Auth::refresh(),
+                'token' => auth()->refresh(),
                 'type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'expires_in' => 60 * 24 * 365.25
             ]
         ]);
     }
@@ -87,5 +87,58 @@ class AuthController extends Controller
       return response()->json([
         'users' => $users
       ]);
+    }
+
+    public function resetPassword(Request $request) {
+      $user = User::with('setor')->find(+$request?->user_id);
+
+      if ($user === null) {
+        return response()->json([
+          'resultado' => 'not-found',
+        ], 400);
+      }
+      
+      $user->password = Hash::make(config('app.user_default_password', ''));
+      
+      if(auth()->user()->setor_id !== $user->setor_id && auth()->user()->nivel !== 'Super-Admin') {
+        return response()->json([
+          'message' => 'Unauthorized.'
+        ], 403);
+      }
+
+      $user->save();
+
+      return response()->json([
+        'resultado' => 'ok',
+      ], 200);
+    }
+
+    public function changePassword(Request $request) {
+      if ($request->newPassword !== $request->confirmPassword) {
+        return response()->json([
+          'resultado' => 'wrong-confirm-password',
+        ], 400);
+      }
+      
+      $user = User::with('setor')->find(auth()->user()->id);
+
+      if ($user === null) {
+        return response()->json([
+          'resultado' => 'not-found',
+        ], 400);
+      }
+
+      if (!Hash::check($request->currentPassword, auth()->user()->password)) {
+        return response()->json([
+          'resultado' => 'wrong-current-password',
+        ], 403);
+      }
+
+      $user->password = Hash::make($request->newPassword);
+      $user->save();
+
+      return response()->json([
+        'resultado' => 'ok',
+      ], 200);
     }
 }
