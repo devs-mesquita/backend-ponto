@@ -90,7 +90,13 @@ class AuthController extends Controller
     }
 
     public function resetPassword(Request $request) {
-      $user = User::with('setor')->find(+$request?->user_id);
+      $user = User::with('setor')->find($request?->user_id);
+
+      if ($user->nivel === "Super-Admin" && in_array(auth()->user()->nivel(), ["Admin", "User"])) {
+        return response()->json([
+          'resultado' => 'unauthorized',
+        ], 403);
+      }
 
       if ($user === null) {
         return response()->json([
@@ -102,7 +108,7 @@ class AuthController extends Controller
       
       if(auth()->user()->setor_id !== $user->setor_id && auth()->user()->nivel !== 'Super-Admin') {
         return response()->json([
-          'message' => 'Unauthorized.'
+          'resultado' => 'unauthorized'
         ], 403);
       }
 
