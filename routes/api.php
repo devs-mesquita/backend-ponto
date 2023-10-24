@@ -35,7 +35,7 @@ Route::middleware(['api-auth'])->group(function () {
     Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
     Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
     
-    Route::resources(['setores' => SetoresController::class]);
+    Route::get('setores',   [SetoresController::class, 'index']);
     Route::get('users/{setor}', [AuthController::class, 'getUsersBySetor']);
     Route::post('register', [AuthController::class, 'register']);
     Route::post('resetpassword', [AuthController::class, 'resetPassword']);
@@ -43,6 +43,7 @@ Route::middleware(['api-auth'])->group(function () {
   
   // Super-Admin
   Route::middleware(['super-admin'])->group(function () {
+    Route::post('setores',   [SetoresController::class, 'store']);
     Route::post('nivel', [AuthController::class, 'changeNivel']);
   });
 });
