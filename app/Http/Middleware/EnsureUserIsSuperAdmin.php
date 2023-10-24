@@ -20,6 +20,7 @@ class EnsureUserIsSuperAdmin
         }
 
         return response()->json([
+          'resultado' => 'unauthorized',
           'message' => 'Unauthorized.'
         ], 403);
     }

@@ -82,7 +82,10 @@ class AuthController extends Controller
 
     public function getUsersBySetor($setor)
     {
-      $users = User::with('setor')->where('setor_id', $setor)->get();
+      $users = User::with('setor')
+      ->where('setor_id', $setor)
+      ->orderBy('name', 'asc')
+      ->get();
 
       return response()->json([
         'users' => $users
@@ -112,6 +115,23 @@ class AuthController extends Controller
         ], 403);
       }
 
+      $user->save();
+
+      return response()->json([
+        'resultado' => 'ok',
+      ], 200);
+    }
+
+    public function changeNivel(Request $request) {
+      $user = User::with('setor')->find($request?->user_id);
+
+      if ($user === null) {
+        return response()->json([
+          'resultado' => 'not-found',
+        ], 400);
+      }
+
+      $user->nivel = $request->nivel;
       $user->save();
 
       return response()->json([

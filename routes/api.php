@@ -40,9 +40,9 @@ Route::middleware(['api-auth'])->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('resetpassword', [AuthController::class, 'resetPassword']);
   });
-
+  
   // Super-Admin
-  // Route::middleware(['super-admin'])->group(function () {
-  //   
-  // });
+  Route::middleware(['super-admin'])->group(function () {
+    Route::post('nivel', [AuthController::class, 'changeNivel']);
+  });
 });
