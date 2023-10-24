@@ -249,8 +249,11 @@ class RegistroController extends Controller
       })
       ->orderBy('data_hora', 'asc')->get();
 
+      $user = User::with('setor')->where('cpf', $cpf)->first();
+
       return response()->json([
-        'registros' => $registros
+        'registros' => $registros,
+        'user' => $user
       ]);
     }
 
