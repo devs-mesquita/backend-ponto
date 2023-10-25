@@ -15,6 +15,12 @@ class Registro extends Model
         'cpf',
         'data',
         'img',
-        'data_hora'
+        'data_hora',
+        'creator_id'
     ];
+
+    public function creator()
+    {
+        return $this->belongsTo('App\Models\User','creator_id');
+    }
 }

@@ -16,7 +16,7 @@ class RegistroController extends Controller
         $cpf = $request->cpf;
 
         if ($cpf === "sistema") {
-          if(!in_array(auth()->user()->nivel(), ['Super-Admin', 'Admin'])) {
+          if(!in_array(auth()->user()?->nivel, ['Super-Admin', 'Admin'])) {
             return response()->json(['message' => 'Unauthorized.'], 402);
           }
 
@@ -39,6 +39,7 @@ class RegistroController extends Controller
           $registro->cpf = $cpf;
           $registro->data_hora = $data_registro;
           $registro->tipo = $tipo;
+          $registro->creator_id = auth()->user()?->id;
 
           $registro->img = "sistema";
           $registro->save();
@@ -73,6 +74,7 @@ class RegistroController extends Controller
           $registro->cpf = $cpf;
           $registro->data_hora = $data_registro;
           $registro->tipo = $tipo;
+          $registro->creator_id = auth()->user()?->id;
 
           $registro->img = "sistema";
           $registro->save();
@@ -148,6 +150,7 @@ class RegistroController extends Controller
           $registro->cpf = $cpf;
           $registro->data_hora = Carbon::now('America/Sao_Paulo')->toDateTimeString();
           $registro->tipo = 'entrada';
+          $registro->creator_id = auth()->user()?->id;
 
           $image = request()->file('img');
           $upload = $image->store('uploadImg');
@@ -170,6 +173,7 @@ class RegistroController extends Controller
           $registro->cpf = $cpf;
           $registro->data_hora = Carbon::now('America/Sao_Paulo')->toDateTimeString();
           $registro->tipo = 'inicio-intervalo';
+          $registro->creator_id = auth()->user()?->id;
 
           $image = request()->file('img');
           $upload = $image->store('uploadImg');
@@ -193,6 +197,7 @@ class RegistroController extends Controller
           $registro->cpf = $cpf;
           $registro->data_hora = Carbon::now('America/Sao_Paulo')->toDateTimeString();
           $registro->tipo = 'fim-intervalo';
+          $registro->creator_id = auth()->user()?->id;
 
           $image = request()->file('img');
           $upload = $image->store('uploadImg');
@@ -215,6 +220,7 @@ class RegistroController extends Controller
           $registro->cpf = $cpf;
           $registro->data_hora = Carbon::now('America/Sao_Paulo')->toDateTimeString();
           $registro->tipo = 'saida';
+          $registro->creator_id = auth()->user()?->id;
 
           $image = request()->file('img');
           $upload = $image->store('uploadImg');
@@ -284,7 +290,8 @@ class RegistroController extends Controller
             'cpf' => $cpf,
             'data_hora' => $date,
             'tipo' => 'ferias',
-            'img' => "ferias"
+            'img' => "ferias",
+            'creator_id' => auth()->user()?->id,
           ]);
         }
 
