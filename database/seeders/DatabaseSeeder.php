@@ -13,17 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $ponto = \App\Models\Setor::firstOrCreate(["nome" => "PONTO"], [
-            "nome" => "PONTO",
+        $terminal = \App\Models\Setor::firstOrCreate(["nome" => "TERMINAL"], [
+            "nome" => "TERMINAL",
             "soma_entrada" => 0,
             "soma_saida" => 0,
         ]);
-
-        // $tecnologia = \App\Models\Setor::firstOrCreate([ "nome" => "TECNOLOGIA" ], [
-        //     "nome" => "TECNOLOGIA",
-        //     "soma_entrada" => -1,
-        //     "soma_saida" => 1,
-        // ]);
 
         \App\Models\User::firstOrCreate(["email" => "root@mesquita.rj.gov.br"], [
             "email" => "root@mesquita.rj.gov.br",
@@ -31,7 +25,7 @@ class DatabaseSeeder extends Seeder
             "password" => Hash::make(config("app.user_default_password", "")),
             "cpf"      => "11111111111",
             "nivel"    => "Super-Admin",
-            "setor_id" => $ponto->id,
+            "setor_id" => $terminal->id,
         ]);
     }
 }

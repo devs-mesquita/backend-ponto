@@ -25,7 +25,7 @@ class VerificarCPF
         $user = User::with('setor')
         ->where('cpf', $cpf)
         ->whereHas('setor', function($q) {
-            return $q->where('nome', '!=', 'PONTO');
+            return $q->where('nome', '!=', 'TERMINAL');
         })->first();
         
         if (!$user) {

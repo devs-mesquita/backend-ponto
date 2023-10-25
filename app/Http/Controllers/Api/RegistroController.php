@@ -16,6 +16,7 @@ class RegistroController extends Controller
         $cpf = $request->cpf;
 
         if ($cpf === "sistema") {
+          // Feriados e Pontos Facultativos
           if(!in_array(auth()->user()?->nivel, ['Super-Admin', 'Admin'])) {
             return response()->json(['message' => 'Unauthorized.'], 402);
           }
@@ -50,6 +51,45 @@ class RegistroController extends Controller
           ], 200);
         }
 
+        if ($request->tipo === "atestado") {
+          if(!in_array(auth()->user()->nivel, ['Super-Admin', 'Admin'])) {
+            return response()->json(['message' => 'Unauthorized.'], 402);
+          }
+
+          $tipo = $request->tipo;
+          $data_registro = Carbon::parse($request->date)->startOfDay();
+
+          $checa_registro = Registro::where('cpf', $cpf)
+          ->whereDate('data_hora', $data_registro)
+          ->first();
+
+          if ($checa_registro !== null) {
+            return response()->json([
+              'resultado' => 'existente',
+              'tipo' => $checa_registro->tipo,
+            ], 401);
+          }
+
+          $registro = new Registro;
+
+          $registro->cpf = $cpf;
+          $registro->data_hora = $data_registro;
+          $registro->tipo = $tipo;
+          $registro->creator_id = auth()->user()?->id;
+
+          // $image = request()->file('img');
+          // $upload = $image->store('uploadImg');
+          // $registro->img = $upload;
+          $registro->img = "sistema";
+
+          $registro->save();
+
+          return response()->json([
+              'resultado' => 'ok',
+              'tipo' => $tipo,
+          ], 200);
+        }
+
         if ($request->tipo === "falta") {
           if(!in_array(auth()->user()->nivel, ['Super-Admin', 'Admin'])) {
             return response()->json(['message' => 'Unauthorized.'], 402);
@@ -76,7 +116,11 @@ class RegistroController extends Controller
           $registro->tipo = $tipo;
           $registro->creator_id = auth()->user()?->id;
 
+          // $image = request()->file('img');
+          // $upload = $image->store('uploadImg');
+          // $registro->img = $upload;
           $registro->img = "sistema";
+
           $registro->save();
 
           return response()->json([
@@ -85,7 +129,8 @@ class RegistroController extends Controller
           ], 200);
         }
 
-        if(auth()->user()->setor->nome !== "PONTO") {
+        // entrada, inicio/fim-intervalo, saida.
+        if(auth()->user()->setor->nome !== "TERMINAL") {
           return response()->json(['resultado' => 'error', 'message' => 'Unauthorized.'], 402);
         }
 
@@ -119,7 +164,7 @@ class RegistroController extends Controller
         ], 200);
         }
 
-        // Checar existência de registros.
+        // Checar existência de férias/falta/atestado.
         $ultimo_registro = Registro::where('cpf', $cpf)
         ->whereDate('data_hora', $data_atual)
           ->orderBy('data_hora', 'desc')
@@ -144,7 +189,7 @@ class RegistroController extends Controller
         }
         
         // Registrar Entrada
-        if ($ultimo_registro === null || $ultimo_registro?->tipo === "facultativo" ) {
+        if ($ultimo_registro === null || in_array($ultimo_registro?->tipo, ["feriado", "facultativo"])) {
           $registro = new Registro;
           
           $registro->cpf = $cpf;
@@ -280,17 +325,21 @@ class RegistroController extends Controller
         $dates = $request->dates;
         $user = User::where('cpf', $cpf)->first();
 
+        // $image = request()->file('img');
+        // $upload = $image->store('uploadImg');
+        // $img = $upload;
+        $img = "sistema";
+
         foreach ($dates as $date) {
-          Registro::firstOrCreate([
+          Registro::updateOrCreate([
             'cpf' => $cpf,
             'data_hora' => $date,
             'tipo' => 'ferias',
-            'img' => 'ferias'
           ], [
             'cpf' => $cpf,
             'data_hora' => $date,
             'tipo' => 'ferias',
-            'img' => "ferias",
+            'img' => $img,
             'creator_id' => auth()->user()?->id,
           ]);
         }
