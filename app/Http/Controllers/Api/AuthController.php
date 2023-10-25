@@ -139,6 +139,23 @@ class AuthController extends Controller
       ], 200);
     }
 
+    public function changeSetor(Request $request) {
+      $user = User::find($request?->user_id);
+
+      if ($user === null) {
+        return response()->json([
+          'resultado' => 'not-found',
+        ], 400);
+      }
+
+      $user->setor_id = $request->setor_id;
+      $user->save();
+
+      return response()->json([
+        'resultado' => 'ok',
+      ], 200);
+    }
+
     public function changePassword(Request $request) {
       if ($request->newPassword !== $request->confirmPassword) {
         return response()->json([
