@@ -34,6 +34,7 @@ Route::middleware(['api-auth'])->group(function () {
     Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
     Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
     Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
+    Route::get('registro/setor',   [RegistroController::class, 'setorUsersWithRegistros']);
     
     Route::get('setores',   [SetoresController::class, 'index']);
     Route::get('users/{setor}', [AuthController::class, 'getUsersBySetor']);

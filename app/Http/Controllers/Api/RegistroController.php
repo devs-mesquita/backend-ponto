@@ -296,4 +296,34 @@ class RegistroController extends Controller
             'tipo' => 'ferias'
         ], 200);
     }
+
+    public function setorUsersWithRegistros(Request $request) {
+      $setorUsers = User::with('setor')
+        ->where('setor_id', $request->setor_id)
+        ->get();
+
+      $CPFArray = User::where('setor_id', $request->setor_id)
+        ->pluck('cpf')
+        ->toArray();
+
+      $from = Carbon::parse($request->from)->startOfDay();
+      $to = Carbon::parse($request->to)->endOfDay();
+
+      $feriados = Registro::where('cpf', 'sistema')
+        ->whereBetween('data_hora', [$from, $to])
+        ->orderBy('data_hora', 'asc')
+        ->get();
+
+      $setorRegistros = Registro::whereIn('cpf', $CPFArray)
+        ->whereBetween('data_hora', [$from, $to])
+        ->orderBy('cpf', 'asc')
+        ->orderBy('data_hora', 'asc')
+        ->get();
+
+      return response()->json([
+        'users' => $setorUsers,
+        'setorRegistros' => $setorRegistros,
+        'feriados' => $feriados,
+      ], 200);
+    }
 }
