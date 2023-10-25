@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('cpf', 11)->unique();
             $table->enum('nivel',['User','Admin','Super-Admin']);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

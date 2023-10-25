@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('img', 200);
             $table->dateTime('data_hora');
             $table->timestamps();
+
+            $table->BigInteger('creator_id')->unsigned();
+            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 
