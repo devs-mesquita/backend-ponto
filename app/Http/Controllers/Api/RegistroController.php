@@ -274,18 +274,15 @@ class RegistroController extends Controller
         $dates = $request->dates;
         $user = User::where('cpf', $cpf)->first();
 
-        $date_start = Carbon::parse($dates[0])->startOfDay();
-        $date_end = Carbon::parse($dates[count($dates)-1])->endOfDay();
-
         foreach ($dates as $date) {
-          $registro = Registro::firstOrCreate([
+          Registro::firstOrCreate([
             'cpf' => $cpf,
-            'data_hora' => Carbon::parse($date)->startOfDay()->toDateTimeString(),
+            'data_hora' => $date,
             'tipo' => 'ferias',
-            'img' => "ferias"
+            'img' => 'ferias'
           ], [
             'cpf' => $cpf,
-            'data_hora' => Carbon::parse($date)->startOfDay()->toDateTimeString(),
+            'data_hora' => $date,
             'tipo' => 'ferias',
             'img' => "ferias"
           ]);

@@ -28,10 +28,10 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware(['api-auth'])->group(function () {
   Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
   Route::post('changepassword', [AuthController::class, 'changePassword']);
+  Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
 
   // >= Admin
   Route::middleware(['admin'])->group(function () {
-    Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
     Route::post('registro/ferias',   [RegistroController::class, 'createFerias'])->middleware('verificar_cpf');
     Route::post('registro/delete',   [RegistroController::class, 'deleteRegistro'])->middleware('verificar_cpf');
     Route::get('registro/setor',   [RegistroController::class, 'setorUsersWithRegistros']);

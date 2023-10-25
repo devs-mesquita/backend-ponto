@@ -16,14 +16,19 @@ class VerificarCPF
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         $cpf = $request->cpf;
 
-        $user = User::where('cpf', $cpf)->whereHas('setor', function($q) {
+        if ($cpf === "sistema"){
+          return $next($request);
+        }
+
+        $user = User::with('setor')
+        ->where('cpf', $cpf)
+        ->whereHas('setor', function($q) {
             return $q->where('nome', '!=', 'PONTO');
         })->first();
         
-        if (!$user && $cpf !== "sistema") {
+        if (!$user) {
             return response()->json(['resultado' => 'invalid-cpf'], 401);
         }
     

@@ -12,9 +12,9 @@ class Registro extends Model
     protected $table = 'registros';
 
     protected $fillable = [
-        // 'nome',
         'cpf',
         'data',
         'img',
+        'data_hora'
     ];
 }
