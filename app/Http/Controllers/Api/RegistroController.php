@@ -153,8 +153,8 @@ class RegistroController extends Controller
 
         $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
 
-        // Checar existência de feriado.
-        $feriado = Registro::where('tipo', 'feriado')
+        // Restringir marcação em feriado.
+        /* $feriado = Registro::where('tipo', 'feriado')
         ->whereDate('data_hora', $data_atual)
         ->first();
 
@@ -162,7 +162,7 @@ class RegistroController extends Controller
           return response()->json([
             'resultado' => 'feriado',
         ], 200);
-        }
+        } */
 
         // Checar existência de férias/falta/atestado.
         $ultimo_registro = Registro::where('cpf', $cpf)
@@ -378,5 +378,100 @@ class RegistroController extends Controller
         'setorRegistros' => $setorRegistros,
         'feriados' => $feriados,
       ], 200);
+    }
+
+    public function confirmRegistroCreate (Request $request)
+    {
+      $user = User::where('cpf', $cpf)->first();
+
+      if ($user->timeout !== null) {
+        // Checar timeout
+        $atual = Carbon::now('America/Sao_Paulo');
+        
+        $timeout = Carbon::createFromFormat('d-m-Y H:i:s',
+        Carbon::parse($user->timeout)->format('d-m-Y H:i:s'),
+        'America/Sao_Paulo');
+
+        if ($timeout->greaterThan($atual)) {
+          return response()->json([
+            'resultado' => 'timeout',
+          ]);
+        }
+      }
+
+      $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
+
+      // Restringir marcação em feriado.
+      /* $feriado = Registro::where('tipo', 'feriado')
+      ->whereDate('data_hora', $data_atual)
+      ->first();
+
+      if($feriado !== null) {
+        return response()->json([
+          'resultado' => 'feriado',
+      ], 200);
+      } */
+
+      // Checar existência de férias/falta/atestado.
+      $ultimo_registro = Registro::where('cpf', $cpf)
+      ->whereDate('data_hora', $data_atual)
+        ->orderBy('data_hora', 'desc')
+        ->first();
+
+      if($ultimo_registro?->tipo === 'ferias') {
+        return response()->json([
+            'resultado' => 'ferias',
+        ], 200);
+      }
+
+      if($ultimo_registro?->tipo === 'falta') {
+        return response()->json([
+            'resultado' => 'falta',
+        ], 200);
+      }
+
+      if($ultimo_registro?->tipo === 'atestado') {
+        return response()->json([
+            'resultado' => 'atestado',
+        ], 200);
+      }
+      
+      // Entrada
+      if ($ultimo_registro === null || in_array($ultimo_registro?->tipo, ["feriado", "facultativo"])) {
+        return response()->json([
+            'resultado' => 'ok',
+            'tipo' => 'entrada'
+        ], 200);
+      }
+      
+      // Início do Intervalo
+      if($ultimo_registro->tipo === 'entrada') {
+        return response()->json([
+            'resultado' => 'ok',
+            'tipo' => 'inicio-intervalo'
+        ], 200);
+
+      }
+      
+      // Fim do Intervalo
+      if ($ultimo_registro->tipo === 'inicio-intervalo') {
+        return response()->json([
+          'resultado' => 'ok',
+          'tipo' => 'fim-intervalo'
+        ], 200);
+      }
+
+      // Saída
+      if ($ultimo_registro->tipo === 'fim-intervalo') {
+        return response()->json([
+          'resultado' => 'ok',
+          'tipo' => 'saida'
+        ], 200);
+      }
+
+      // Todos os pontos foram preenchidos.
+      return response()->json([
+        'resultado' => 'complete',
+      ]);
     }
 }

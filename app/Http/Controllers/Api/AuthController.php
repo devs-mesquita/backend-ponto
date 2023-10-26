@@ -44,6 +44,17 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        if (User::where('cpf', $request->cpf)->count() > 0) {
+          return response()->json([
+            'resultado' => 'cpf-existente',
+          ], 400);
+        }
+
+        if (User::where('email', $request->email)->count() > 0) {
+          return response()->json([
+            'resultado' => 'email-existente',
+          ], 400);
+        }
 
         $user = User::create([
             'name'     => $request->name,
