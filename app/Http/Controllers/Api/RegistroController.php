@@ -18,7 +18,7 @@ class RegistroController extends Controller
         if ($cpf === "sistema") {
           // Feriados e Pontos Facultativos
           if(!in_array(auth()->user()?->nivel, ['Super-Admin', 'Admin'])) {
-            return response()->json(['message' => 'Unauthorized.'], 402);
+            return response()->json(['resultado' => 'unauthorized.'], 402);
           }
 
           $tipo = $request->tipo;
@@ -53,7 +53,7 @@ class RegistroController extends Controller
 
         if ($request->tipo === "atestado") {
           if(!in_array(auth()->user()->nivel, ['Super-Admin', 'Admin'])) {
-            return response()->json(['message' => 'Unauthorized.'], 402);
+            return response()->json(['resultado' => 'unauthorized.'], 402);
           }
 
           $tipo = $request->tipo;
@@ -92,7 +92,7 @@ class RegistroController extends Controller
 
         if ($request->tipo === "falta") {
           if(!in_array(auth()->user()->nivel, ['Super-Admin', 'Admin'])) {
-            return response()->json(['message' => 'Unauthorized.'], 402);
+            return response()->json(['resultado' => 'unauthorized.'], 402);
           }
 
           $tipo = $request->tipo;
@@ -131,7 +131,7 @@ class RegistroController extends Controller
 
         // entrada, inicio/fim-intervalo, saida.
         if(auth()->user()->setor->nome !== "TERMINAL") {
-          return response()->json(['resultado' => 'error', 'message' => 'Unauthorized.'], 402);
+          return response()->json(['resultado' => 'error', 'message' => 'unauthorized.'], 402);
         }
 
         $user = User::where('cpf', $cpf)->first();
