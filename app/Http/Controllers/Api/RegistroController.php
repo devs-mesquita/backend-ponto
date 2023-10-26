@@ -131,7 +131,7 @@ class RegistroController extends Controller
 
         // entrada, inicio/fim-intervalo, saida.
         if(auth()->user()->setor->nome !== "TERMINAL") {
-          return response()->json(['resultado' => 'error', 'message' => 'unauthorized.'], 402);
+          return response()->json(['resultado' => 'unauthorized.'], 402);
         }
 
         $user = User::where('cpf', $cpf)->first();

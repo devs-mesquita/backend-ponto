@@ -26,7 +26,7 @@ class AuthController extends Controller
         
         if (!$token) {
             return response()->json([
-                'message' => 'unauthorized',
+                'resultado' => 'unauthorized',
             ], 401);
         }
 
@@ -75,7 +75,7 @@ class AuthController extends Controller
     {
         Auth::logout();
         return response()->json([
-            'message' => 'Successfully logged out',
+            'resultado' => 'ok',
         ]);
     }
 

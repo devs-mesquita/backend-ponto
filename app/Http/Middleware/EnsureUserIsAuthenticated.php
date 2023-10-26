@@ -20,8 +20,7 @@ class EnsureUserIsAuthenticated
         }
 
         return response()->json([
-          'resultado' => 'unauthenticated',
-          'message' => 'Unauthenticated.'
+          'resultado' => 'unauthorized',
         ], 401);
     }
 }

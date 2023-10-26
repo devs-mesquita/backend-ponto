@@ -21,7 +21,6 @@ class EnsureUserIsAdmin
 
         return response()->json([
           'resultado' => 'unauthorized',
-          'message' => 'Unauthorized.'
         ], 403);
     }
 }
