@@ -18,7 +18,7 @@ class VerificarCPF
     {
         $cpf = $request->cpf;
 
-        if ($cpf === "sistema"){
+        if ($cpf === "sistema") {
           return $next($request);
         }
 

@@ -382,7 +382,8 @@ class RegistroController extends Controller
 
     public function confirmRegistroCreate (Request $request)
     {
-      $user = User::where('cpf', $cpf)->first();
+      $cpf = $request->cpf;
+      $user = User::with('setor')->where('cpf', $cpf)->first();
 
       if ($user->timeout !== null) {
         // Checar timeout
@@ -395,7 +396,7 @@ class RegistroController extends Controller
         if ($timeout->greaterThan($atual)) {
           return response()->json([
             'resultado' => 'timeout',
-          ]);
+          ], 400);
         }
       }
 
@@ -440,6 +441,7 @@ class RegistroController extends Controller
       if ($ultimo_registro === null || in_array($ultimo_registro?->tipo, ["feriado", "facultativo"])) {
         return response()->json([
             'resultado' => 'ok',
+            'user' => $user,
             'tipo' => 'entrada'
         ], 200);
       }
@@ -448,6 +450,7 @@ class RegistroController extends Controller
       if($ultimo_registro->tipo === 'entrada') {
         return response()->json([
             'resultado' => 'ok',
+            'user' => $user,
             'tipo' => 'inicio-intervalo'
         ], 200);
 
@@ -457,6 +460,7 @@ class RegistroController extends Controller
       if ($ultimo_registro->tipo === 'inicio-intervalo') {
         return response()->json([
           'resultado' => 'ok',
+          'user' => $user,
           'tipo' => 'fim-intervalo'
         ], 200);
       }
@@ -465,6 +469,7 @@ class RegistroController extends Controller
       if ($ultimo_registro->tipo === 'fim-intervalo') {
         return response()->json([
           'resultado' => 'ok',
+          'user' => $user,
           'tipo' => 'saida'
         ], 200);
       }
@@ -472,6 +477,6 @@ class RegistroController extends Controller
       // Todos os pontos foram preenchidos.
       return response()->json([
         'resultado' => 'complete',
-      ]);
+      ], 400);
     }
 }
