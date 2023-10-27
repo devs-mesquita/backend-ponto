@@ -16,7 +16,4 @@ class Setor extends Model
         'soma_entrada',
         'soma_saida',
     ];
-
-    
-
 }

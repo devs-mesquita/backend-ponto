@@ -15,6 +15,7 @@ class Registro extends Model
         'cpf',
         'data',
         'img',
+        'tipo',
         'data_hora',
         'creator_id'
     ];
