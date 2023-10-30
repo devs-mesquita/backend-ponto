@@ -16,4 +16,9 @@ class Setor extends Model
         'soma_entrada',
         'soma_saida',
     ];
+
+    public function users()
+    {
+        return $this->hasMany('App\Models\User', 'setor_id'); 
+    }
 }

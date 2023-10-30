@@ -42,7 +42,7 @@ class RegistroController extends Controller
           $registro->tipo = $tipo;
           $registro->creator_id = auth()->user()?->id;
 
-          $registro->img = "sistema";
+          $registro->img = $tipo;
           $registro->save();
 
           return response()->json([
@@ -80,7 +80,7 @@ class RegistroController extends Controller
           // $image = request()->file('img');
           // $upload = $image->store('uploadImg');
           // $registro->img = $upload;
-          $registro->img = "sistema";
+          $registro->img = $tipo;
 
           $registro->save();
 
@@ -119,7 +119,7 @@ class RegistroController extends Controller
           // $image = request()->file('img');
           // $upload = $image->store('uploadImg');
           // $registro->img = $upload;
-          $registro->img = "sistema";
+          $registro->img = $tipo;
 
           $registro->save();
 
@@ -328,7 +328,7 @@ class RegistroController extends Controller
         // $image = request()->file('img');
         // $upload = $image->store('uploadImg');
         // $img = $upload;
-        $img = "sistema";
+        $img = "ferias";
 
         foreach ($dates as $date) {
           Registro::updateOrCreate([

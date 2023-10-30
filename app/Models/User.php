@@ -62,5 +62,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo('App\Models\Setor','setor_id'); 
     }
 
+    public function registros()
+    {
+        return $this->hasMany('App\Models\Registro', 'cpf'); 
+    }
 
 }

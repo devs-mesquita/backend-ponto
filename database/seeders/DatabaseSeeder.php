@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::firstOrCreate(["email" => "root@mesquita.rj.gov.br"], [
             "name" => "Root User",
             "email" => "root@mesquita.rj.gov.br",
-            "cpf"      => "11111111111",
+            "cpf"      => "sistema",
             "nivel"    => "Super-Admin",
             "password" => Hash::make(config("app.user_default_password", "")),
             "setor_id" => $terminal->id,
