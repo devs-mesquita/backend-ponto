@@ -26,8 +26,10 @@ Route::controller(AuthController::class)->group(function () {
 
 // Authenticated, >= User:
 Route::middleware(['api-auth'])->group(function () {
-  Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
+  Route::get('checkpassword', [AuthController::class, 'checkDefaultPassword']);
   Route::post('changepassword', [AuthController::class, 'changePassword']);
+
+  Route::get('registro',   [RegistroController::class, 'getRegistros'])->middleware('verificar_cpf');
   Route::post('registro',   [RegistroController::class, 'createRegistro'])->middleware('verificar_cpf');
   Route::post('registro/confirm',   [RegistroController::class, 'confirmRegistroCreate'])->middleware('verificar_cpf');
 

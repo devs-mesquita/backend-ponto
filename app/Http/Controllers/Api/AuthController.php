@@ -34,6 +34,7 @@ class AuthController extends Controller
         $user = User::with('setor')->find(Auth::id());
         return response()->json([
             'user' => $user,
+            'default_password' => Hash::check(config('app.user_default_password', ''), $user->password),
             'authorization' => [
                 'token' => $token,
                 'type' => 'bearer',
@@ -194,5 +195,24 @@ class AuthController extends Controller
       return response()->json([
         'resultado' => 'ok',
       ], 200);
+    }
+
+    public function checkDefaultPassword(Request $request)
+    {
+      $user = User::find(auth()?->user()?->id);
+        
+      if ($user === null) {
+        return response()->json([
+          'resultado' => 'not-found',
+        ]);
+      }
+
+      if (Hash::check(config('app.user_default_password', ''), $user->password)) {
+        return response()->json([
+          'resultado' => 'default-password',
+        ]);
+      }
+
+      return response()->json(['resultado' => 'ok']);
     }
 }
