@@ -51,7 +51,7 @@ class RegistroController extends Controller
           ], 200);
         }
 
-        if ($request->tipo === "atestado") {
+        if ($request->tipo === "abono") {
           if(!in_array(auth()->user()->nivel, ['Super-Admin', 'Admin'])) {
             return response()->json(['resultado' => 'unauthorized.'], 402);
           }
@@ -153,23 +153,24 @@ class RegistroController extends Controller
 
         $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
 
-        // Restringir marcação em feriado.
-        /* $feriado = Registro::where('tipo', 'feriado')
+        // Restringir marcação em feriado/facultativo.
+        $feriado_facultativo = Registro::whereIn('tipo', ['feriado', 'facultativo'])
         ->whereDate('data_hora', $data_atual)
         ->first();
 
-        if($feriado !== null) {
+        if($feriado_facultativo !== null) {
           return response()->json([
-            'resultado' => 'feriado',
+            'resultado' => $feriado_facultativo->tipo,
         ], 200);
-        } */
+        }
 
-        // Checar existência de férias/falta/atestado.
+        // Checar existência de férias/falta/abono.
         $ultimo_registro = Registro::where('cpf', $cpf)
         ->whereDate('data_hora', $data_atual)
           ->orderBy('data_hora', 'desc')
           ->first();
 
+        // Restringir marcação em férias/falta/abono.
         if($ultimo_registro?->tipo === 'ferias') {
           return response()->json([
               'resultado' => 'ferias',
@@ -182,14 +183,14 @@ class RegistroController extends Controller
           ], 200);
         }
 
-        if($ultimo_registro?->tipo === 'atestado') {
+        if($ultimo_registro?->tipo === 'abono') {
           return response()->json([
-              'resultado' => 'atestado',
+              'resultado' => 'abono',
           ], 200);
         }
         
         // Registrar Entrada
-        if ($ultimo_registro === null || in_array($ultimo_registro?->tipo, ["feriado", "facultativo"])) {
+        if ($ultimo_registro === null) {
           $registro = new Registro;
           
           $registro->cpf = $cpf;
@@ -403,17 +404,17 @@ class RegistroController extends Controller
       $data_atual = Carbon::now('America/Sao_Paulo')->format('Y-m-d');
 
       // Restringir marcação em feriado.
-      /* $feriado = Registro::where('tipo', 'feriado')
+      $feriado_facultativo = Registro::whereIn('tipo', ['feriado', 'facultativo'])
       ->whereDate('data_hora', $data_atual)
       ->first();
 
-      if($feriado !== null) {
+      if($feriado_facultativo !== null) {
         return response()->json([
-          'resultado' => 'feriado',
+          'resultado' => $feriado_facultativo->tipo,
       ], 200);
-      } */
+      }
 
-      // Checar existência de férias/falta/atestado.
+      // Checar existência de férias/falta/abono.
       $ultimo_registro = Registro::where('cpf', $cpf)
       ->whereDate('data_hora', $data_atual)
         ->orderBy('data_hora', 'desc')
@@ -431,14 +432,14 @@ class RegistroController extends Controller
         ], 200);
       }
 
-      if($ultimo_registro?->tipo === 'atestado') {
+      if($ultimo_registro?->tipo === 'abono') {
         return response()->json([
-            'resultado' => 'atestado',
+            'resultado' => 'abono',
         ], 200);
       }
       
       // Entrada
-      if ($ultimo_registro === null || in_array($ultimo_registro?->tipo, ["feriado", "facultativo"])) {
+      if ($ultimo_registro === null) {
         return response()->json([
             'resultado' => 'ok',
             'user' => $user,

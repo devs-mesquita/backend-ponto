@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('cpf', 11);
             $table->foreign('cpf')->references('cpf')->on('users');
 
-            $table->enum('tipo',['entrada','inicio-intervalo','fim-intervalo', 'saida', 'atestado', 'ferias', 'falta', 'feriado', 'facultativo']);
+            $table->enum('tipo',['entrada','inicio-intervalo','fim-intervalo', 'saida', 'abono', 'ferias', 'falta', 'feriado', 'facultativo']);
             $table->string('img', 200);
             $table->dateTime('data_hora');
             $table->timestamps();
