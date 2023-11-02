@@ -42,7 +42,14 @@ class RegistroController extends Controller
           $registro->tipo = $tipo;
           $registro->creator_id = auth()->user()?->id;
 
-          $registro->img = $tipo;
+          $imgPath = null;
+          $image = request()->file('img');
+          if ($image) {
+            $upload = $image->store('public/uploadImg');
+            $imgPath = "storage/".substr($upload, 7);
+          }
+          $registro->img = $imgPath;
+
           $registro->save();
 
           return response()->json([
@@ -77,10 +84,13 @@ class RegistroController extends Controller
           $registro->tipo = $tipo;
           $registro->creator_id = auth()->user()?->id;
 
-          // $image = request()->file('img');
-          // $upload = $image->store('uploadImg');
-          // $registro->img = $upload;
-          $registro->img = $tipo;
+          $imgPath = null;
+          $image = request()->file('img');
+          if ($image) {
+            $upload = $image->store('public/uploadImg');
+            $imgPath = "storage/".substr($upload, 7);
+          }
+          $registro->img = $imgPath;
 
           $registro->save();
 
@@ -116,10 +126,13 @@ class RegistroController extends Controller
           $registro->tipo = $tipo;
           $registro->creator_id = auth()->user()?->id;
 
-          // $image = request()->file('img');
-          // $upload = $image->store('uploadImg');
-          // $registro->img = $upload;
-          $registro->img = $tipo;
+          $imgPath = null;
+          $image = request()->file('img');
+          if ($image) {
+            $upload = $image->store('public/uploadImg');
+            $imgPath = "storage/".substr($upload, 7);
+          }
+          $registro->img = $imgPath;
 
           $registro->save();
 
@@ -198,9 +211,18 @@ class RegistroController extends Controller
           $registro->tipo = 'entrada';
           $registro->creator_id = auth()->user()?->id;
 
+          $imgPath = null;
           $image = request()->file('img');
-          $upload = $image->store('uploadImg');
-          $registro->img = $upload;
+          if ($image === null) {
+            return response()->json([
+              "resultado" => "missing-img"
+            ], 400);
+          }
+
+          $upload = $image->store('public/uploadImg');
+          $imgPath = "storage/".substr($upload, 7);
+          $registro->img = $imgPath;
+
           $registro->save();
 
           $user->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
@@ -221,9 +243,18 @@ class RegistroController extends Controller
           $registro->tipo = 'inicio-intervalo';
           $registro->creator_id = auth()->user()?->id;
 
+          $imgPath = null;
           $image = request()->file('img');
-          $upload = $image->store('uploadImg');
-          $registro->img = $upload;
+          if ($image === null) {
+            return response()->json([
+              "resultado" => "missing-img"
+            ], 400);
+          }
+
+          $upload = $image->store('public/uploadImg');
+          $imgPath = "storage/".substr($upload, 7);
+          $registro->img = $imgPath;
+
           $registro->save();
 
           $user->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
@@ -245,9 +276,18 @@ class RegistroController extends Controller
           $registro->tipo = 'fim-intervalo';
           $registro->creator_id = auth()->user()?->id;
 
+          $imgPath = null;
           $image = request()->file('img');
-          $upload = $image->store('uploadImg');
-          $registro->img = $upload;
+          if ($image === null) {
+            return response()->json([
+              "resultado" => "missing-img"
+            ], 400);
+          }
+
+          $upload = $image->store('public/uploadImg');
+          $imgPath = "storage/".substr($upload, 7);
+          $registro->img = $imgPath;
+
           $registro->save();
 
           $user->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
@@ -268,9 +308,18 @@ class RegistroController extends Controller
           $registro->tipo = 'saida';
           $registro->creator_id = auth()->user()?->id;
 
+          $imgPath = null;
           $image = request()->file('img');
-          $upload = $image->store('uploadImg');
-          $registro->img = $upload;
+          if ($image === null) {
+            return response()->json([
+              "resultado" => "missing-img"
+            ], 400);
+          }
+
+          $upload = $image->store('public/uploadImg');
+          $imgPath = "storage/".substr($upload, 7);
+          $registro->img = $imgPath;
+
           $registro->save();
 
           $user->timeout = Carbon::now('America/Sao_Paulo')->addMinutes(30)->toDateTimeString();
@@ -322,33 +371,36 @@ class RegistroController extends Controller
 
     public function createFerias(Request $request)
     {
-        $cpf = $request->cpf;
-        $dates = $request->dates;
-        $user = User::where('cpf', $cpf)->first();
+      $cpf = $request->cpf;
+      $dates = json_decode($request->dates);
+      $user = User::where('cpf', $cpf)->first();
 
-        // $image = request()->file('img');
-        // $upload = $image->store('uploadImg');
-        // $img = $upload;
-        $img = "ferias";
+      $imgPath = null;
+      $image = request()->file('img');
+      
+      if ($image) {
+        $upload = $image->store('public/uploadImg');
+        $imgPath = "storage/".substr($upload, 7);
+      }
 
-        foreach ($dates as $date) {
-          Registro::updateOrCreate([
-            'cpf' => $cpf,
-            'data_hora' => $date,
-            'tipo' => 'ferias',
-          ], [
-            'cpf' => $cpf,
-            'data_hora' => $date,
-            'tipo' => 'ferias',
-            'img' => $img,
-            'creator_id' => auth()->user()?->id,
-          ]);
-        }
+      foreach ($dates as $date) {
+        Registro::updateOrCreate([
+          'cpf' => $cpf,
+          'data_hora' => $date,
+          'tipo' => 'ferias',
+        ], [
+          'cpf' => $cpf,
+          'data_hora' => $date,
+          'tipo' => 'ferias',
+          'img' => $imgPath,
+          'creator_id' => auth()->user()?->id,
+        ]);
+      }
 
-        return response()->json([
-            'resultado' => 'ok',
-            'tipo' => 'ferias'
-        ], 200);
+      return response()->json([
+          'resultado' => 'ok',
+          'tipo' => 'ferias'
+      ], 200);
     }
 
     public function setorUsersWithRegistros(Request $request) {
