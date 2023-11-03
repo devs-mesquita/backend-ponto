@@ -18,7 +18,7 @@ class SetoresController extends Controller
 
     public function store(Request $request)
     {
-      $nome = strtoupper($request->nome);
+      $nome = mb_strtoupper($request->nome);
 
       $checa_setor = Setor::where('nome', $nome)->count();
       if ($checa_setor > 0) {
