@@ -24,6 +24,15 @@ class User extends Authenticatable implements JWTSubject
         'cpf',
         'nivel',
         'password',
+
+        'matricula',
+        'pispasep',
+        'ctps',
+        'data_admissao',
+        'cargo',
+        'lotacao',
+        'repouso',
+        
         'timeout',
         'setor_id'
     ];

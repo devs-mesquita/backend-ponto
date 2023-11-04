@@ -13,15 +13,27 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('cpf', 11)->unique();
             $table->enum('nivel',['User','Admin','Super-Admin']);
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            
+            $table->string('cpf', 11)->unique();
+            $table->string('matricula')->nullable();
+            $table->string('pispasep')->nullable();
+            $table->string('ctps')->nullable();
+            $table->dateTime('data_admissao')->nullable();
+
+            $table->string('cargo')->nullable();
+            $table->string('lotacao')->nullable();
+            // Array [0..6], 0 = Domingo.
+            $table->json('repouso')->nullable();
+
+            $table->timestamp('email_verified_at')->nullable();
+            $table->dateTime('timeout')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->dateTime('timeout')->nullable();
         });
     }
 

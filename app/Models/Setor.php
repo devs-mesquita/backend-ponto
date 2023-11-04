@@ -13,6 +13,19 @@ class Setor extends Model
 
     protected $fillable = [
         'nome',
+        'cnpj',
+        'cnae',
+        'empresa',
+        'visto_fiscal',
+
+        'logradouro',
+        'numero_logradouro',
+        'complemento',
+        'bairro',
+        'cidade',
+        'uf',
+        'cep',
+
         'soma_entrada',
         'soma_saida',
     ];
