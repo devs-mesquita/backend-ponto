@@ -47,7 +47,12 @@ Route::middleware(['api-auth'])->group(function () {
   
   // Super-Admin
   Route::middleware(['super-admin'])->group(function () {
+    Route::get('setores/{id}',   [SetoresController::class, 'show']);
     Route::post('setores',   [SetoresController::class, 'store']);
+    Route::post('setores/update',   [SetoresController::class, 'update']);
+
+    Route::get('user/{id}',   [AuthController::class, 'showUser']);
+    Route::post('user/update',   [AuthController::class, 'updateUser']);
     Route::post('user/setor', [AuthController::class, 'changeSetor']);
     Route::post('user/nivel', [AuthController::class, 'changeNivel']);
   });

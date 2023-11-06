@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             
             $table->string('cpf', 11);
-            $table->foreign('cpf')->references('cpf')->on('users');
+            $table->foreign('cpf')->references('cpf')->on('users')->onUpdate('cascade');
 
             $table->enum('tipo',['entrada','inicio-intervalo','fim-intervalo', 'saida', 'abono', 'ferias', 'falta', 'feriado', 'facultativo']);
             $table->string('img', 200)->nullable();

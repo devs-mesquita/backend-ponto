@@ -77,6 +77,21 @@ class AuthController extends Controller
       ]);
   }
 
+  public function showUser($id)
+  {
+    $user = User::with('setor')->find($id);
+
+    if ($user === null) {
+      return response()->json([
+        "resultado" => "not-found"
+      ], 404);
+    }
+
+    return response()->json([
+      "user" => $user,
+    ]);
+  }
+
   public function updateUser(Request $request)
   {
     $user = User::find($request->user_id);
@@ -87,11 +102,22 @@ class AuthController extends Controller
       ], 404);
     }
 
+    if (User::where('cpf', $request->cpf)->where('id', '!=', $request->user_id)->count() > 0) {
+      return response()->json([
+        'resultado' => 'cpf-existente',
+      ], 400);
+    }
+
+    if (User::where('email', $request->email)->where('id', '!=', $request->user_id)->count() > 0) {
+      return response()->json([
+        'resultado' => 'email-existente',
+      ], 400);
+    }
+
     $user->name = $request->name;
     $user->email = $request->email;
     $user->cpf = $request->cpf;
-    $user->nivel = $request->nivel;
-    
+
     $user->matricula = $request->matricula;
     $user->pispasep = $request->pispasep;
     $user->ctps = $request->ctps;
@@ -99,8 +125,6 @@ class AuthController extends Controller
     $user->cargo = mb_strtoupper($request->cargo);
     $user->lotacao = mb_strtoupper($request->lotacao);
     $user->repouso = json_encode($request->repouso);
-
-    $user->setor_id = $request->setor_id;
 
     $user->save();
 
